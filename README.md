@@ -1,4 +1,4 @@
 hsvroum
 =======
 
-Porting xjm's crap game from C++ to Haskell
+Porting @jmfork's crap game from C++ to Haskell
