@@ -77,7 +77,7 @@ displayShip ship = do
   rotate (-90 :: GLfloat) $ Vector3 0 1 0
   translate $ Vector3 0 1 (0 :: GLfloat)
   rotate (-90 :: GLfloat) $ Vector3 1 0 0
-  rotate (180 * angle ship) $ Vector3 0 0 1
+  rotate (180 * angle ship / 3.14159) $ Vector3 0 0 1
   color3f 0.7 0.5 0.6
   renderPrimitive Quads $ assetFromFile "../assets/body.raw"
   color3f 0.7 0.2 0.2

@@ -51,10 +51,8 @@ idle _window time shipRef trapsRef = do
 
 keyboardMouse :: IORef Ship -> KeyboardMouseCallback
 keyboardMouse shipRef key _ _ _ = case key of
-  (SpecialKey KeyLeft ) -> shipRef $~! \ ship -> ship { angle = angle ship + 0.05 }
-  (SpecialKey KeyRight) -> shipRef $~! \ ship -> ship { angle = angle ship - 0.05 }
+  (SpecialKey skey) -> shipRef $~! rotateShip skey
   _ -> return ()
-keyboardMouse _ _ _ _ _ = return ()
 
 display :: IORef Ship -> IORef [Trap] -> DisplayCallback
 display shipRef trapsRef = do

@@ -35,10 +35,18 @@ moveShip :: Int -> Ship -> Ship
 moveShip dt ship =
   let pt  = ship_pos ship
       dt' = fromIntegral dt
-      alp = realToFrac $ angle ship
+      alp = angle ship
       vel = realToFrac $ velocity ship
-  in ship { ship_pos = pt { x_pos = x_pos pt + alp * (dt' / 3)
-                          , z_pos = z_pos pt + vel * dt' }}
+  in ship { ship_pos = pt { x_pos = x_pos pt + vel * sin alp * dt'
+                          , z_pos = z_pos pt + vel * cos alp * dt' }
+          , velocity = velocity ship + dt' / 300000}
+
+rotateShip :: SpecialKey -> Ship -> Ship
+rotateShip skey ship = ship { angle = angle ship + mod skey }
+  where
+    mod KeyRight = -0.15
+    mod KeyLeft  = 0.15
+    mod _        = 0
 
 data Trap = Trap { trap_pos :: Point3D
                  , trap_col :: Color3 GLdouble
@@ -56,7 +64,7 @@ outcome :: Ship -> Trap -> Outcome
 outcome ship trap =
   let spos = ship_pos ship
       tpos = trap_pos trap in
-  if z_pos tpos + 2 * size trap < z_pos spos
+  if z_pos tpos + 2 * size trap + 100 < z_pos spos
   then Alive []
   else
     let dx = x_pos tpos - x_pos spos
@@ -67,7 +75,7 @@ outcome ship trap =
        else Alive [trap]
 
 outcomes :: Ship -> [Trap] -> Outcome
-outcomes ship = foldl (\ o -> (o <>) . outcome ship) mempty
+outcomes ship = foldl (\ o -> (<> o) . outcome ship) mempty
 
 randPoint3D :: Point3D -> IO Point3D
 randPoint3D pt = do
